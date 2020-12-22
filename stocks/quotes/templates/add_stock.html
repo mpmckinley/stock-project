@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content  %}
+
+    <h1>Add stock...</h1>
+
+    <form class="d-flex" action="{% url 'add_stock' %}" method="POST">
+    {% csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Add Ticker to List" aria-label="Search" name="ticker">
+        <button class="btn btn-outline-success" type="submit">Add Yolo</button>
+    </form>
+
+
+    {% comment %} ITEM auto parses KVP in list {% endcomment %}
+    {% for item in ticker %}
+       {{ item }}<br>
+    {% endfor %}
+
+{% endblock content  %}
