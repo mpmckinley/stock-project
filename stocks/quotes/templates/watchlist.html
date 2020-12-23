@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content  %}
+
+    <h1>Add stock...to your watchlist</h1>
+
+    <form class="d-flex" action="{% url 'watchlist' %}" method="POST">
+    {% csrf_token %}
+        <input class="form-control me-2" type="search" placeholder="Add Ticker to List" aria-label="Search" name="ticker">
+        <button class="btn btn-outline-success" type="submit">Add Yolo</button>
+    </form>
+
+
+    {% comment %} ITEM auto parses KVP in list {% endcomment %}
+    <table class="table">
+        <thead>
+            <tr>  
+                <th scope="col">Name</th>
+                <th scope="col">Price</th>
+                <th scope="col">Previous Close</th>
+                <th scope="col">Market Cap</th>
+                <th scope="col">YTD Change</th>
+                <th scope="col">52 W H</th>
+                <th scope="col">52 W L</th>
+                <th></th>
+            </tr>
+        </thead>   
+        <tbody>
+            {% for stock in stocks %}
+                <tr>
+                    <th scope="row">{{ stock.ticker }}</th>
+                    <td>{{ stock.id }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td> 
+                        <form method="POST" action="{% url 'delete' stock.id  %}">
+                        {% csrf_token %}
+                            <button type="submit">
+                            Delete
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content  %}

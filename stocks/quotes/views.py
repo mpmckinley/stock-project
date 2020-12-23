@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Stock
 from .forms import StockForm
@@ -9,7 +9,8 @@ def home(request):
 
     if request.method == 'POST':
         ticker = request.POST['ticker_sym'] 
-        api_request = requests.get("https://cloud.iexapis.com/stable/stock/" + ticker + "/quote?token=pk_dc347bfe6e2446899144d051448ffbc7")
+        # ***USING SANDBOX TOKEN (replace URL 'sandbox' with 'cloud')***
+        api_request = requests.get("https://sandbox.iexapis.com/stable/stock/" + ticker + "/quote?token=Tpk_1ef07fc95dc746f2a89346f3613d1982")
         try:
             api = json.loads(api_request.content)
             # return render(request, "home.html", {'api':api})
@@ -19,8 +20,8 @@ def home(request):
     else:
         return render(request, "home.html", {'ticker':"Enter a ticker above"})
 
-def add_stock(request):
-    ticker = Stock.objects.all()
+def watchlist(request):
+    stocks = Stock.objects.all()
 
     if request.method == 'POST':
         form = StockForm(request.POST or None)
@@ -28,19 +29,20 @@ def add_stock(request):
         if form.is_valid():
             form.save()
             messages.success(request, ("Stock has been added."))
-            return redirect('add_stock')
+            return redirect('watchlist')
 
         else:
-            return render(request, "add_stock.html", {"ticker":ticker})
+            return render(request, "watchlist.html", {"stocks":stocks})
 
     else:
-        return render(request, "add_stock.html", {"ticker":ticker})
+        return render(request, "watchlist.html", {"stocks":stocks})
 
-def delete(request, stock_id):
-    item = Stock.objects.get(pk=stock_id)
-    item.delete()
-    messages.success(request, ("Stock Deleted."))
-    return redirect('add_stock')
+def delete(request, stock_pk):
+    stock = get_object_or_404(Stock, pk=stock_pk)
+    if request.method == "POST":
+        stock.delete()
+        messages.success(request, ("Ticker Deleted."))
+        return redirect('watchlist')
 
 def about(request):
     return render(request, "about.html", {})
