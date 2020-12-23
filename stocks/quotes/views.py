@@ -36,5 +36,11 @@ def add_stock(request):
     else:
         return render(request, "add_stock.html", {"ticker":ticker})
 
+def delete(request, stock_id):
+    item = Stock.objects.get(pk=stock_id)
+    item.delete()
+    messages.success(request, ("Stock Deleted."))
+    return redirect('add_stock')
+
 def about(request):
     return render(request, "about.html", {})

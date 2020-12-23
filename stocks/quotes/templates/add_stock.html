@@ -13,7 +13,8 @@
 
     {% comment %} ITEM auto parses KVP in list {% endcomment %}
     {% for item in ticker %}
-       {{ item }}<br>
+       {{ item }} | <a href="{% url 'delete' item.id  %}">Delete</a>
+       <br>
     {% endfor %}
 
 {% endblock content  %}
